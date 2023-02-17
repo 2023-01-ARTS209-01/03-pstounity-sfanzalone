@@ -1,55 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
+using Platformer.Core;
+using Platformer.Model;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+//This code comes from the Unity microgame platformer project
+
+namespace Platformer.Mechanics
 {
-
-    private float horizontal;
-    private float speed = 8f;
-    private float jumpingPower = 16f;
-    private bool isFacingRight = true;
-
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// This class exposes the the game model in the inspector, and ticks the
+    /// simulation.
+    /// </summary> 
+    public class PlayerMovement : MonoBehaviour
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
+        public static PlayerMovement Instance { get; private set; }
 
-        if(Input.GetButtonDown("Jump") && IsGrounded)
+        //This model field is public and can be therefore be modified in the 
+        //inspector.
+        //The reference actually comes from the InstanceRegister, and is shared
+        //through the simulation and events. Unity will deserialize over this
+        //shared reference when the scene loads, allowing the model to be
+        //conveniently configured inside the inspector.
+        public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
+
+        void OnEnable()
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            Instance = this;
         }
 
-        if (Input.GetButtonDown("Jump") && rb.velocity.y > 0f)
+        void OnDisable()
         {
-            rb.velocity = new Vector2(rb.velocity.y * 0.5f);
+            if (Instance == this) Instance = null;
         }
 
-        Flip();
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    }
-
-    private void FixedUpdate()
-    {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-    }
-
-    private void Flip()
-    {
-        if(isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        void Update()
         {
-            isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            if (Instance == this) Simulation.Tick();
         }
     }
 }
