@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         
         moveSpeed = 0.5f;
-        jumpForce = 60f;
+        jumpForce = 30f;
         isJumping = false;
     }
 
@@ -49,6 +49,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        isJumping = true;
+        isJumping = true; //Executed ONLY through the up arrow key
     }
 }
