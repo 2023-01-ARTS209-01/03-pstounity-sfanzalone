@@ -44,17 +44,11 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.Tag == "Platform")
-        {
-            isJumping = false;
-        }
+        isJumping = false;
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.Tag == "Platform")
-        {
-            isJumping = true;
-        }
+        isJumping = true;
     }
 }
