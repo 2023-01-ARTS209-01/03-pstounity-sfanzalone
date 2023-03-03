@@ -49,6 +49,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        isJumping = true; //Executed ONLY through the up arrow key
+        isJumping = true; //Executed through the up arrow key & W
     }
 }
